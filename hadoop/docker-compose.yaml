@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  # 1. Hadoop NameNode (الماستر بتاع التخزين)
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    environment:
+      - CLUSTER_NAME=social_cluster
+      - HDFS_CONF_dfs_permissions_enabled=false # عشان نتجنب مشاكل الصلاحيات
+    env_file:
+      - ./hadoop.env
+    ports:
+      - "9870:9870" # دي واجهة الويب عشان تتفرج على الملفات
+      - "9000:9000"
+    networks:
+      - social_network
+
+  # 2. Hadoop DataNode (الهارد اللي بيخزن)
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    # 1. التعديل الأول: تثبيت اسم الهوست عشان الرابط ميتغيرش
+    hostname: datanode
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    env_file:
+      - ./hadoop.env
+    # 2. التعديل الثاني: فتح بورت الداتا (مهم جداً)
+    ports:
+      - "9864:9864"
+    networks:
+      - social_network
+    
+  # 3. Python Ingester (العامل اللي بينقل من كافكا لهادوب)
+  hdfs-writer:
+    image: python:3.9-slim
+    container_name: hdfs-writer
+    volumes:
+      - ./:/app
+    working_dir: /app
+    # بنسطب المكتبات ونشغل السكريبت فوراً
+    command: >
+      bash -c "pip install kafka-python hdfs && python -u ingest_to_hdfs.py"
+    depends_on:
+      - namenode
+    networks:
+      - social_network
+
+# ربط الشبكة بالمشروع الأساسي
+networks:
+  social_network:
+    name: social_network
+    external: true
+    
