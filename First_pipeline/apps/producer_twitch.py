@@ -6,8 +6,8 @@ from datetime import datetime
 from kafka import KafkaProducer
 
 # ====== إعدادات الـ API وكافكا ======
-CLIENT_ID = "qkfw543btd5n8k0kzkuejn3lwg7ii2"
-CLIENT_SECRET = "qopcaselvwlig5l198oco3iy1ozrbl"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 
 producer = KafkaProducer(
     bootstrap_servers=['kafka:29092'],
@@ -109,3 +109,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
