@@ -1,0 +1,11 @@
+docker logs -f social-pulse-app
+
+
+http://localhost:8501
+
+
+
+docker exec -it social-pulse-app python3 /opt/spark/apps/producer_tiktok.py
+docker exec -it social-pulse-app python3 /opt/spark/apps/producer_twitch.py
+docker exec -it social-pulse-app python3 /opt/spark/apps/producer_youtube.py
+docker exec -it social-pulse-app python3 /opt/spark/apps/producer_reddit.py
