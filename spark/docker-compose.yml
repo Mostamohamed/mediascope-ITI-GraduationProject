@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  spark-master:
+    build: .
+    container_name: spark-masterr
+    entrypoint: ["/opt/entrypoint.sh"]
+    command: ["/opt/spark/sbin/start-master.sh"]
+    user: spark
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      # - JAVA_HOME=/usr/lib/jvm/java-17-openjdk/jre
+    volumes:
+      - F:/ITI/GP/spark/apps:/opt/spark/apps
+    networks:
+      - social_network
+
+  spark-worker:
+    build: .
+    container_name: spark-workerr
+    entrypoint: ["/opt/entrypoint.sh"]
+    command: ["/opt/spark/sbin/start-worker.sh", "spark://spark-master:7077"]
+    user: spark
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      # - JAVA_HOME=/usr/lib/jvm/java-17-openjdk/jre
+    volumes:
+      - F:/ITI/GP/spark/apps:/opt/spark/apps
+    networks:
+      - social_network
+
+networks:
+  social_network:
+    external: true
