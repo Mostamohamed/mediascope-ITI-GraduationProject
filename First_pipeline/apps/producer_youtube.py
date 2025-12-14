@@ -5,7 +5,7 @@ from datetime import datetime
 from kafka import KafkaProducer
 
 # 1. إعدادات API وكافكا
-API_KEY = "AIzaSyAKJKObE_IJ8kZWSSzKq5eCIpIVOeBET7U" # المفتاح بتاعك
+API_KEY = "" # المفتاح بتاعك
 REGION = "EG"
 producer = KafkaProducer(
     bootstrap_servers=['kafka:29092'],
@@ -77,3 +77,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
